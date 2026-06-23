@@ -1,0 +1,682 @@
+<style>
+    :root {
+        --bg-principal: #121212;
+        --bg-tarjeta: #1e1e1e;
+        --borde-industrial: #2a2a2a;
+        --acento-laser: #ff6a00; /* Naranja fuego / chispa láser */
+        --acento-laser-hover: #e05300;
+        --texto-blanco: #f5f5f5;
+        --texto-mutado: #a0a0a0;
+        --fuente-industrial: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    .taller-catalogo {
+        background-color: var(--bg-principal);
+        color: var(--texto-blanco);
+        font-family: var(--fuente-industrial);
+        padding: 40px 20px;
+        min-height: 100vh;
+    }
+
+    /* Encabezado Estilo Taller */
+    .taller-header {
+        text-align: center;
+        margin-bottom: 60px;
+        position: relative;
+    }
+
+    .taller-header h1 {
+        font-size: 2.8em;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--texto-blanco);
+        margin: 0;
+        font-weight: 800;
+    }
+
+    .taller-header h1 span { color: var(--acento-laser); }
+
+    .taller-header p {
+        color: var(--texto-mutado);
+        font-size: 1.1em;
+        margin-top: 10px;
+        letter-spacing: 1px;
+    }
+
+    .taller-header::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: var(--acento-laser);
+        margin: 20px auto 0 auto;
+        border-radius: 2px;
+    }
+
+    /* Grid de Productos */
+    .taller-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 35px;
+        max-width: 1250px;
+        margin: 0 auto;
+    }
+
+    /* Tarjetas de Producto */
+    .taller-card {
+        background: var(--bg-tarjeta);
+        border: 1px solid var(--borde-industrial);
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+    }
+
+    .taller-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--acento-laser);
+        box-shadow: 0 10px 25px rgba(255, 106, 0, 0.15);
+    }
+
+    /* SLIDER MINIMALISTA CON PUNTOS (DOTS) */
+    .taller-slider-container {
+        width: 100%;
+        height: 260px;
+        position: relative;
+        overflow: hidden;
+        background: #1a1a1a;
+    }
+
+    .taller-slider-wrapper {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .taller-slider-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        flex-shrink: 0;
+        filter: grayscale(15%) brightness(90%);
+        transition: filter 0.3s ease;
+        cursor: pointer;
+    }
+
+    .taller-slider-wrapper img:hover {
+        filter: grayscale(0%) brightness(105%) !important;
+    }
+
+    .taller-card:hover .taller-slider-wrapper img {
+        filter: grayscale(0%) brightness(100%);
+    }
+
+    /* Contenedor de Puntos Inferiores */
+    .taller-slider-dots {
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+        background: rgba(18, 18, 18, 0.4);
+        padding: 4px 8px;
+        border-radius: 10px;
+        backdrop-filter: blur(2px);
+    }
+
+    /* Estilo de cada Círculo */
+    .taller-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        padding: 0;
+    }
+
+    .taller-dot.active {
+        background: var(--acento-laser);
+        transform: scale(1.2);
+        box-shadow: 0 0 8px var(--acento-laser);
+    }
+
+    /* Contenido de la Tarjeta */
+    .taller-info {
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .taller-title {
+        font-size: 1.35em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 12px 0;
+        color: var(--texto-blanco);
+        font-weight: 700;
+    }
+
+    .taller-desc {
+        font-size: 0.95em;
+        color: var(--texto-mutado);
+        line-height: 1.6;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    /* Especificaciones Técnicas */
+    .taller-specs {
+        background: #161616;
+        border-left: 3px solid var(--acento-laser);
+        padding: 15px;
+        margin-bottom: 25px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .taller-specs ul { list-style: none; padding: 0; margin: 0; }
+    .taller-specs li {
+        font-size: 0.85em;
+        color: #d0d0d0;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: baseline;
+    }
+    .taller-specs li::before {
+        content: "■";
+        color: var(--acento-laser);
+        font-size: 0.7em;
+        margin-right: 10px;
+    }
+    .taller-specs strong { color: var(--texto-blanco); text-transform: uppercase; font-size: 0.9em; }
+
+    /* Botón Industrial */
+    .taller-btn {
+        display: block;
+        text-align: center;
+        background: transparent;
+        color: var(--texto-blanco);
+        border: 2px solid var(--acento-laser);
+        padding: 12px 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.9em;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .taller-btn:hover {
+        background: var(--acento-laser);
+        color: #000;
+        box-shadow: 0 0 15px rgba(255, 106, 0, 0.4);
+    }
+
+    /* Badge de Categoría Técnica */
+    .taller-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(18, 18, 18, 0.85);
+        border: 1px solid var(--acento-laser);
+        color: var(--acento-laser);
+        padding: 5px 10px;
+        font-size: 0.75em;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        border-radius: 2px;
+        z-index: 5;
+    }
+
+    /* Sección Especial */
+    .taller-sacro-section {
+        margin-top: 80px;
+        border-top: 1px dashed var(--borde-industrial);
+        padding-top: 60px;
+    }
+
+    /* ==========================================================================
+       ESTILOS DEL LIGHTBOX INTERACTIVO (PREVISUALIZACIÓN)
+       ========================================================================== */
+    .taller-lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(10, 10, 10, 0.95);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .taller-lightbox.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .taller-lightbox-content {
+        position: relative;
+        max-width: 85%;
+        max-height: 85vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .taller-lightbox-img {
+        max-width: 100%;
+        max-height: 85vh;
+        object-fit: contain;
+        border: 1px solid var(--borde-industrial);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        border-radius: 4px;
+    }
+
+    /* Botón Cerrar */
+    .taller-lightbox-close {
+        position: absolute;
+        top: -45px;
+        right: 0;
+        color: var(--texto-blanco);
+        font-size: 35px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+    .taller-lightbox-close:hover { color: var(--acento-laser); }
+
+    /* Botones de Navegación (Flechas) */
+    .taller-lightbox-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(30, 30, 30, 0.7);
+        border: 1px solid var(--borde-industrial);
+        color: var(--texto-blanco);
+        font-size: 24px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    .taller-lightbox-btn:hover {
+        background: var(--acento-laser);
+        color: #000;
+        border-color: var(--acento-laser);
+    }
+    .taller-lightbox-prev { left: -70px; }
+    .taller-lightbox-next { right: -70px; }
+
+    /* Contador de imágenes inferior */
+    .taller-lightbox-counter {
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--texto-mutado);
+        font-size: 0.9em;
+        letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
+        .taller-lightbox-prev { left: 10px; }
+        .taller-lightbox-next { right: 10px; }
+        .taller-lightbox-btn { width: 40px; height: 40px; font-size: 18px; }
+        .taller-lightbox-close { top: -40px; right: 10px; }
+    }
+</style>
+
+<div class="taller-catalogo">
+    
+    <header class="taller-header">
+        <h1>ACCESORIOS <span>CADO</span></h1>
+        <p>Grabado Láser de Alta Precisión • Catálogo de Piezas Disponibles</p>
+    </header>
+
+    <div class="taller-grid">
+
+        <div class="taller-card">
+            <span class="taller-badge">Láser de Alta Densidad</span>
+            <div class="taller-slider-container">
+                <div class="taller-slider-wrapper">
+                    <img src="https://imgur.com/VcVYgnO.jpg" alt="Agenda Vista Frontal" onclick="openLightbox(this, 0)"/>
+                    <img src="https://imgur.com/Y3yJ3sc.jpg" alt="Agenda Detalle del Grabado" onclick="openLightbox(this, 1)"/>
+                    <img src="https://imgur.com/9TgJ2yC.jpg" alt="Agenda Vista Interior" onclick="openLightbox(this, 2)"/>
+                </div>
+                <div class="taller-slider-dots">
+                    <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                </div>
+            </div>
+            <div class="taller-info">
+                <h3 class="taller-title">Agendas Ejecutivas en Madera Noble</h3>
+                <p class="taller-desc">Portadas estructuradas en material sintentico con quemado por vectores de alta fricción. Perfecto para logos corporativos, nombres ejecutivos, profesiones o ilustraciones detalladas que requieran relieve táctil permanente.</p>
+                <div class="taller-specs">
+                    <ul>
+                        <li><strong>Soporte:</strong> Madera de grano fino seleccionada (tonos claros y rojizos).</li>
+                        <li><strong>Grabado:</strong> Trama profunda con micro-sombreados láser.</li>
+                        <li><strong>Diseño:</strong> Personalización completa de portadas a pedido.</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20una%20Agenda%20en%20Madera%20Ejecutiva" class="taller-btn" target="_blank">Iniciar Orden</a>
+            </div>
+        </div>
+
+        <div class="taller-card">
+            <span class="taller-badge">Set de Taller Coordinado</span>
+            <div class="taller-slider-container">
+                <div class="taller-slider-wrapper">
+                    <img src="https://imgur.com/PDoXhVG.jpg" alt="Kit Completo Escritorio" onclick="openLightbox(this, 0)"/>
+                    <img src="https://imgur.com/WBADVyh.jpg" alt="Detalle Soporte Celular" onclick="openLightbox(this, 1)"/>
+                    <img src="https://imgur.com/AmW4lne.jpg" alt="Organizador Personalizado Logo" onclick="openLightbox(this, 2)"/>
+                </div>
+                <div class="taller-slider-dots">
+                    <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                </div>
+            </div>
+            <div class="taller-info">
+                <h3 class="taller-title">Kit Organizador de Estación de Trabajo</h3>
+                <p class="taller-desc">Optimiza tu espacio con un sistema funcional de oficina o despacho. Este kit modular incluye un portalápices cúbico y soporte para smartphone, ideal para personalizar con cualquier temática: marcas corporativas, motivos botánicos, logos de bandas o heráldica institucional.</p>
+                <div class="taller-specs">
+                    <ul>
+                        <li><strong>Estructura:</strong> Bloques de MDF premium con ensambles de encaje limpio.</li>
+                        <li><strong>Componentes:</strong> Portalápices + Soporte universal móvil + Llavero ID opcional.</li>
+                        <li><strong>Versatilidad:</strong> Adaptable a diseños de cultura pop, ejecutivos o institucionales.</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20el%20Kit%20Organizador%20de%20Escritorio" class="taller-btn" target="_blank">Iniciar Orden</a>
+            </div>
+        </div>
+
+        <div class="taller-card">
+            <span class="taller-badge">Artesanía de Ensamble</span>
+            <div class="taller-slider-container">
+                <div class="taller-slider-wrapper">
+                    <img src="https://imgur.com/FJCPT4h.jpg" alt="Portarretratos Abierto" onclick="openLightbox(this, 0)"/>
+                    <img src="https://imgur.com/BKSsmkO.jpg" alt="Detalle del Borde Grabado" onclick="openLightbox(this, 1)"/>
+                  
+                </div>
+                <div class="taller-slider-dots">
+                    <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                </div>
+            </div>
+            <div class="taller-info">
+                <h3 class="taller-title">Portarretratos Doble Industrial</h3>
+                <p class="taller-desc">Diseño articulado de dos paneles para visualización independiente en superficies. Marcos perimetrales customizados mediante pirógrafo láser con tipografías complejas, nombres cruzados e hilados de flores decorativas.</p>
+                <div class="taller-specs">
+                    <ul>
+                        <li><strong>Material:</strong> Madera maciza clara con herrajes mecánicos de unión.</li>
+                        <li><strong>Capacidad:</strong> Doble bahía para fotografías estándar.</li>
+                        <li><strong>Acabado:</strong> Quemado perimetral limpio con orlas botánicas caladas.</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20el%20Portarretratos%20Doble%20Articulado" class="taller-btn" target="_blank">Iniciar Orden</a>
+            </div>
+        </div>
+
+        <div class="taller-card">
+            <span class="taller-badge">Corte y Termofijado</span>
+            <div class="taller-slider-container">
+                <div class="taller-slider-wrapper">
+                    <img src="https://imgur.com/MfZWHLz.jpg" alt="Cofre Vista General" onclick="openLightbox(this, 0)"/>
+                    <img src="https://imgur.com/um9bQoR.jpg" alt="Cofre Tapa Curva Detalle" onclick="openLightbox(this, 1)"/>
+                    <img src="https://imgur.com/lzkmuqT.jpg" alt="Cofre Abierto" onclick="openLightbox(this, 2)"/>
+                </div>
+                <div class="taller-slider-dots">
+                    <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                </div>
+            </div>
+            <div class="taller-info">
+                <h3 class="taller-title">Cofre Mecanizado con Tapa Curva</h3>
+                <p class="taller-desc">Contenedor de seguridad estilizado para resguardo de piezas de valor o correspondencia. Destaca por su desarrollo de tapa curva tipo baúl y soportes de elevación inferiores, complementado con patrones florales quemados por repetición.</p>
+                <div class="taller-specs">
+                    <ul>
+                        <li><strong>Material:</strong> Madera contrachapada estructural con flexibilidad técnica.</li>
+                        <li><strong>Detalles:</strong> Patrón de grabado repetitivo en laterales y cara frontal.</li>
+                        <li><strong>Anclaje:</strong> Patas integradas en base para despeje de superficie.</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20el%20Cofre%20Mecanizado%20Tipo%20Ba%C3%BAl" class="taller-btn" target="_blank">Iniciar Orden</a>
+            </div>
+        </div>
+
+        <div class="taller-card">
+            <span class="taller-badge">Producción en Serie</span>
+            <div class="taller-slider-container">
+                <div class="taller-slider-wrapper">
+                    <img src="https://imgur.com/zAIcJA2.jpg" alt="Set Completo de Posavasos" onclick="openLightbox(this, 0)"/>
+                    <img src="https://imgur.com/5LwiCeV.jpg" alt="Detalle de una pieza" onclick="openLightbox(this, 1)"/>
+                    <img src="https://imgur.com/DKrxlIE.jpg" alt="Posavasos en Uso" onclick="openLightbox(this, 2)"/>
+                </div>
+                <div class="taller-slider-dots">
+                    <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                </div>
+            </div>
+            <div class="taller-info">
+                <h3 class="taller-title">Posavasos Circulares & Souvenirs</h3>
+                <p class="taller-desc">Discos protectores de superficie, diseñados en material de corcho . Grabados con CNC laser de alta velocidad y con tipografía limpia en contraste oscuro, ideales para barras de café, uso doméstico o como recordatorios marcados de eventos masivos.</p>
+                <div class="taller-specs">
+                    <ul>
+                        <li><strong>Corte:</strong> Formato circular simétrico limpio de ceniza o rebabas.</li>
+                        <li><strong>Estilo:</strong> Sets temáticos de cocina, frases cafeteras o conmemorativas.</li>
+                        <li><strong>Grosor:</strong> Láminas de madera compacta estables al calor.</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20un%20Set%20de%20Posavasos%20Circulares" class="taller-btn" target="_blank">Iniciar Orden</a>
+            </div>
+        </div>
+
+        <div class="taller-card">
+            <span class="taller-badge">Grabado Micro-Píxel</span>
+            <div class="taller-slider-container">
+                <div class="taller-slider-wrapper">
+                    <img src="https://imgur.com/baOfEcg.jpg" alt="Llaveros Diseño Pop" onclick="openLightbox(this, 0)"/>
+                    <img src="https://imgur.com/Y46X1dR.jpg" alt="Llaveros Detalle Trazado" onclick="openLightbox(this, 1)"/>
+                    <img src="https://imgur.com/0L09ebm.jpg" alt="Llaveros Lote Completo" onclick="openLightbox(this, 2)"/>
+                </div>
+                <div class="taller-slider-dots">
+                    <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                    <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                </div>
+            </div>
+            <div class="taller-info">
+                <h3 class="taller-title">Llaveros de Colección y Cultura Pop</h3>
+                <p class="taller-desc">Accesorios portátiles maquinados en madera de alta densidad. El láser realiza un tramado profundo para trazar siluetas icónicas de cómics, cultura pop y videojuegos con líneas negras sólidas y sombreados por puntos.</p>
+                <div class="taller-specs">
+                    <ul>
+                        <li><strong>Herraje:</strong> Argolla de acero niquelado integrada con mosquetón rápido.</li>
+                        <li><strong>Fidelidad:</strong> Trazado nítido apto para personajes e imagotipos complejos.</li>
+                        <li><strong>Ergonomía:</strong> Bordes de madera pulidos y suavizados anti-enganche.</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20Llaveros%20de%20Madera%20de%20Colecci%C3%B3n" class="taller-btn" target="_blank">Iniciar Orden</a>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="taller-sacro-section">
+        <header class="taller-header">
+            <h2>Ediciones Especiales: <span>Grabado Rústico</span></h2>
+            <p>Piezas monumentales trabajadas sobre madera natural maciza y fechas especiales</p>
+        </header>
+        
+        <div class="taller-grid">
+            
+            <div class="taller-card">
+                <span class="taller-badge">Corte Rústico Premium</span>
+                <div class="taller-slider-container">
+                    <div class="taller-slider-wrapper">
+                        <img src="https://imgur.com/elphCe1.jpg" alt="Rodaja Vista General" onclick="openLightbox(this, 0)"/>
+                        <img src="https://imgur.com/DUVR1Oy.jpg" alt="Detalle Veteado y Corteza" onclick="openLightbox(this, 1)"/>
+                        <img src="https://imgur.com/2oz8SFU.jpg" alt="Rodaja en Exhibidor" onclick="openLightbox(this, 2)"/>
+                    </div>
+                    <div class="taller-slider-dots">
+                        <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                        <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                        <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                    </div>
+                </div>
+                <div class="taller-info">
+                    <h3 class="taller-title">Lienzo Rústico y portallaves de madera</h3>
+                    <p class="taller-desc">La máxima expresión de precisión artística de nuestro taller. Logramos plasmar retratos sagrados, familiares o conmemorativos sobre el corte transversal de un tronco real o perfectas para fijar en pared, customizadas con frases familiares de bienvenida, siluetas decorativas o apellidos; equipadas con herrajes de sujeción resistentes y ganchos metálicos.</p>
+                    <div class="taller-specs">
+                        <ul>
+                            <li><strong>Base:</strong> Rodaja natural maciza curada y nivelada de forma artesanal.</li>
+                            <li><strong>Estética:</strong> Contorno rústico irregular que convierte cada pieza en única.</li>
+                            <li><strong>Ideal para:</strong> Altares domésticos, con mensajes inspiradores o imagotipos familiares.</li>
+                        </ul>
+                    </div>
+                    <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20cotizar%20un%20Grabado%20en%20Rodaja%20de%20Madera%20R%C3%BAstica" class="taller-btn" target="_blank">Consultar Disponibilidad</a>
+                </div>
+            </div>
+
+            <div class="taller-card">
+                <span class="taller-badge">Servicios de grabado laser</span>
+                <div class="taller-slider-container">
+                    <div class="taller-slider-wrapper">
+                        <img src="https://imgur.com/60JEef8.jpg" alt="Portallaves Instalado" onclick="openLightbox(this, 0)"/>
+                        <img src="https://imgur.com/2P0Z9k5.jpg" alt="Detalle de Ganchos Metálicos" onclick="openLightbox(this, 1)"/>
+                        <img src="https://imgur.com/lrOvIKE.jpg" alt="Portallaves Diferente Grabado" onclick="openLightbox(this, 2)"/>
+                    </div>
+                    <div class="taller-slider-dots">
+                        <button class="taller-dot active" onclick="jumpToSlide(this, 0)"></button>
+                        <button class="taller-dot" onclick="jumpToSlide(this, 1)"></button>
+                        <button class="taller-dot" onclick="jumpToSlide(this, 2)"></button>
+                    </div>
+                </div>
+                <div class="taller-info">
+                    <h3 class="taller-title">servicios de grabado y corte laser</h3>
+                    <p class="taller-desc">Soluciones de manufactura y personalización de alta fidelidad mediante vectores de precisión. Desarrollamos corte limpio y dimensionado exacto en láminas de MDF de 3 mm, así como grabado profundo y corte estructural en cuero auténtico. Optimizamos tus diseños para plasmarlos sobre objetos y superficies compuestas, garantizando acabados limpios con alto contraste y relieve táctil permanente.</p>
+                    <div class="taller-specs">
+                        <ul>
+                            <li><strong>Trabajo en Cuero:</strong> Grabado de alta definición y corte limpio sin deshilachar para artículos premium.</li>
+                        <li><strong>Corte en MDF:</strong> Maquila y dimensionado milimétrico de piezas y estructuras en MDF de 3 mm.</li>
+                        <li><strong>Grabado de Objetos:</strong> Marcación personalizada de herramientas, termos, accesorios y artículos corporativos.</li>
+                        
+                        </ul>
+                    </div>
+                    <a href="https://wa.me/tu_numero?text=Hola,%20quiero%20ordenar%20un%20Portallaves%20de%20Madera%20Personalizado" class="taller-btn" target="_blank">Iniciar Orden</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div id="tallerLightbox" class="taller-lightbox">
+    <div class="taller-lightbox-content">
+        <button class="taller-lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="taller-lightbox-btn taller-lightbox-prev" onclick="changeLightboxSlide(-1)">&#10094;</button>
+        <img id="lightboxImg" class="taller-lightbox-img" src="" alt="Previsualización">
+        <button class="taller-lightbox-btn taller-lightbox-next" onclick="changeLightboxSlide(1)">&#10095;</button>
+        <div id="lightboxCounter" class="taller-lightbox-counter">1 / 3</div>
+    </div>
+</div>
+
+<script>
+    // Control de Mini-Sliders en Tarjetas
+    function jumpToSlide(dotButton, slideIndex) {
+        const container = dotButton.closest('.taller-slider-container');
+        const wrapper = container.querySelector('.taller-slider-wrapper');
+        const dots = container.querySelectorAll('.taller-dot');
+        
+        wrapper.style.transform = `translateX(-${slideIndex * 100}%)`;
+        
+        dots.forEach(dot => dot.classList.remove('active'));
+        dotButton.classList.add('active');
+    }
+
+    // LÓGICA DEL LIGHTBOX GLOBAL
+    let currentLightboxImages = [];
+    let currentLightboxIndex = 0;
+
+    function openLightbox(clickedImg, index) {
+        // Encontrar todas las imágenes hermanas dentro del mismo producto
+        const wrapper = clickedImg.closest('.taller-slider-wrapper');
+        const imagesInProduct = wrapper.querySelectorAll('img');
+        
+        // Mapear los src de este producto específico
+        currentLightboxImages = Array.from(imagesInProduct).map(img => img.src);
+        currentLightboxIndex = index;
+        
+        // Cargar datos en el modal
+        updateLightboxDOM();
+        
+        // Mostrar Lightbox
+        document.getElementById('tallerLightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+        document.getElementById('tallerLightbox').classList.remove('active');
+    }
+
+    function changeLightboxSlide(direction) {
+        currentLightboxIndex += direction;
+        
+        // Bucle infinito circular
+        if (currentLightboxIndex >= currentLightboxImages.length) {
+            currentLightboxIndex = 0;
+        }
+        if (currentLightboxIndex < 0) {
+            currentLightboxIndex = currentLightboxImages.length - 1;
+        }
+        
+        updateLightboxDOM();
+    }
+
+    function updateLightboxDOM() {
+        const imgModal = document.getElementById('lightboxImg');
+        const counterModal = document.getElementById('lightboxCounter');
+        
+        imgModal.src = currentLightboxImages[currentLightboxIndex];
+        counterModal.innerText = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
+    }
+
+    // Cerrar si se hace clic fuera de la imagen (en el fondo oscuro)
+    document.getElementById('tallerLightbox').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLightbox();
+        }
+    });
+
+    // Control por teclado (Esc, Izquierda, Derecha)
+    document.addEventListener('keydown', function(e) {
+        const lightbox = document.getElementById('tallerLightbox');
+        if (lightbox.classList.contains('active')) {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') changeLightboxSlide(1);
+            if (e.key === 'ArrowLeft') changeLightboxSlide(-1);
+        }
+    });
+</script>
